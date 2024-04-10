@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - '*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container: ghcr.io/cryptogarageinc/elements-testing:v0.1.0
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+      - name: Run lint
+        run: npm run tslint_check
+
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/cryptogarageinc/elements-testing:v0.1.0
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run cmake_all
+      - name: Persist workspace
+        uses: actions/upload-artifact@v2
+        with:
+          name: workspace
+          path: .
+
+  test:
+    runs-on: ubuntu-latest
+    container: ghcr.io/cryptogarageinc/elements-testing:v0.1.0
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: workspace
+      - name: Test
+        run: npm run test_report
+      - name: Store test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: jest-reports
+          path: ./reports/jest
+
+  integration:
+    runs-on: ubuntu-latest
+    container: ghcr.io/cryptogarageinc/elements-testing:v0.1.0
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: workspace
+      - name: Integration Tests
+        run: |
+          ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests'
+          sleep 3
+          npm run test_integration
+      - name: Store integration test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: integration-reports
+          path: ./reports/integration
+
+  prebuild:
+    runs-on: ubuntu-latest
+    container: ghcr.io/cryptogarageinc/elements-testing:v0.1.0
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prebuild setup
+        run: |
+          touch .no-postinstall
+          npm ci
+      - name: Build prebuilt binaries
+        run: npm run-script prebuild_all
+      - name: Persist prebuilds
+        uses: actions/upload-artifact@v2
+        with:
+          name: prebuilds
+          path: ./prebuilds
+
+  release:
+    runs-on: ubuntu-latest
+    container: cimg/node:lts
+    needs: prebuild
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: prebuilds
+          path: ./prebuilds
+      - name: Release setup
+        run: |
+          touch .no-postinstall
+          npm ci
+      - name: Upload prebuilt releases
+        run: npm run-script prebuild_upload_all -- ${{ secrets.GITHUB_ACCESS_TOKEN }}
