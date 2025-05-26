@@ -13,7 +13,12 @@
     "napi_versions": [
       2,
       3
-    ]
+    ],
+    "module_name": "cfddlc_js",
+    "module_path": "./build/Release/",
+    "remote_path": "./",
+    "package_name": "cfd-dlc-js-v{version}-node-v{node_abi}-{platform}-{arch}.tar.gz",
+    "host": "https://github.com/atomicfinance/cfd-dlc-js/releases/download/v{version}/"
   },
   "scripts": {
     "postinstall": "/bin/sh postinstall.sh",
