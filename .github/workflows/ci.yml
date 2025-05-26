@@ -1,13 +1,10 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - '**'
-  workflow_dispatch:
+on: [push]
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   lint:
@@ -129,7 +126,7 @@ jobs:
       - run: touch .no-postinstall
       - run: npm ci
       - run: npm run prebuild_nodejs
-      - run: npm run prebuild_upload_all -- ${{ secrets.GH_ACCESS_TOKEN }}
+      - run: npm run prebuild_upload_all -- ${{ secrets.GITHUB_TOKEN }}
 
   prebuild-windows:
     runs-on: windows-latest
@@ -166,4 +163,4 @@ jobs:
         run: |
           npm run prebuild_nodejs
 
-      - run: npm run prebuild_upload_all -- ${{ secrets.GH_ACCESS_TOKEN }}
+      - run: npm run prebuild_upload_all -- ${{ secrets.GITHUB_TOKEN }}
