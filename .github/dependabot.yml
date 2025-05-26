@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "AtomicFinance/maintainers"
+    assignees:
+      - "AtomicFinance/maintainers"
+    commit-message:
+      prefix: "npm"
+      include: "scope"
+    # Group minor and patch updates together
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Allow major version updates but keep them separate
+    ignore:
+      # Ignore updates for packages that might break compatibility
+      - dependency-name: "node-gyp"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "cmake-js"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
