@@ -155,11 +155,15 @@ jobs:
 
       - name: Install dependencies
         shell: bash
+        env:
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
         run: |
           npm ci
 
       - name: Run prebuild script
         shell: bash
+        env:
+          CMAKE_POLICY_VERSION_MINIMUM: "3.5"
         run: |
           npm run prebuild_nodejs
 
