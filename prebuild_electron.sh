@@ -18,4 +18,5 @@ prebuild \
   --CDENABLE_JS_WRAPPER=off \
   --CDTARGET_RPATH="@executable_path;/usr/local/lib;/usr/local/lib64;\$\$ORIGIN/node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/../node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/../../node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/../../../node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/../../../../node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/../../../../../node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/../../../../../../node_modules/cfd-dlc-js/wrap_js/build/Release;\$ORIGIN/build/Release;\$ORIGIN/wrap_js/build/Release;\$ORIGIN/wrap_js/dl_lib/lib" \
   -C \
-  --CDnapi_build_version=3 
+  --CDnapi_build_version=3 \
+  --CDCMAKE_POLICY_VERSION_MINIMUM=3.5
