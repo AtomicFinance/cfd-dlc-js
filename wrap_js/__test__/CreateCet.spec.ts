@@ -1,10 +1,10 @@
-import * as cfddlcjs from "../../index.js";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 const testCase = [
   TestHelper.createTestCase(
-    "CreateCet",
+    'CreateCet',
     cfddlcjs.CreateCet,
     {
       localFundPubkey: TestData.LocalFundPubkey,
@@ -19,8 +19,8 @@ const testCase = [
     },
     {
       hex: TestData.CetHexUnsigned,
-    }
+    },
   ),
 ];
 
-TestHelper.doTest("CreateCet", testCase);
+TestHelper.doTest('CreateCet', testCase);

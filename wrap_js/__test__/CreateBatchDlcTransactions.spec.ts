@@ -1,11 +1,11 @@
-import * as cfddlcjs from "../../index.js";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
-import * as CfdUtils from "../cfd_utils";
+import * as cfddlcjs from '../../index.js';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
+import * as CfdUtils from '../cfd_utils';
 
 function GetRequest(
   localChange = 4899999789,
-  remoteChange = 4899999789
+  remoteChange = 4899999789,
 ) {
   return {
     localPayouts: [TestData.WinAmount, TestData.LoseAmount, TestData.WinAmount, TestData.LoseAmount],
@@ -55,7 +55,7 @@ function GetRequest(
 
 const testCase = [
   TestHelper.createTestCase(
-    "CreateBatchDlcTransactions",
+    'CreateBatchDlcTransactions',
     cfddlcjs.CreateBatchDlcTransactions,
     GetRequest(),
     {
@@ -67,24 +67,24 @@ const testCase = [
         TestData.CetBatchHex2,
       ],
       refundTxHexList: [TestData.RefundBatchTransaction, TestData.RefundBatchTransaction2],
-    }
+    },
   ),
 ];
 
 const errorCase = [
   TestHelper.createTestCase(
-    "CreateBatchDlcTransactions invalid Pubkey",
+    'CreateBatchDlcTransactions invalid Pubkey',
     cfddlcjs.CreateBatchDlcTransactions,
-    { ...GetRequest(), localFundPubkeys: ["", ""] },
-    TestHelper.createIllegalArgumentError("Invalid Pubkey data.")
+    { ...GetRequest(), localFundPubkeys: ['', ''] },
+    TestHelper.createIllegalArgumentError('Invalid Pubkey data.'),
   ),
   TestHelper.createTestCase(
-    "CreateBatchDlcTransactions invalid hex string(3 chars)",
+    'CreateBatchDlcTransactions invalid hex string(3 chars)',
     cfddlcjs.CreateBatchDlcTransactions,
-    { ...GetRequest(), localFundPubkeys: ["000", "000"] },
-    TestHelper.createIllegalArgumentError("hex to byte convert error.")
+    { ...GetRequest(), localFundPubkeys: ['000', '000'] },
+    TestHelper.createIllegalArgumentError('hex to byte convert error.'),
   ),
 ];
 
-TestHelper.doTest("CreateBatchDlcTransactions", testCase);
-TestHelper.doTest("CreateBatchDlcTransactions ErrorCase", errorCase);
+TestHelper.doTest('CreateBatchDlcTransactions', testCase);
+TestHelper.doTest('CreateBatchDlcTransactions ErrorCase', errorCase);

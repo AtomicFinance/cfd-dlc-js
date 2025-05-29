@@ -1,5 +1,5 @@
-import * as cfddlcjs from "../../index.js";
-import { TestCase } from "./TestCase";
+import * as cfddlcjs from '../../index.js';
+import { TestCase } from './TestCase';
 /**
  * @class Utility class for running unit tests.
  */
@@ -11,7 +11,7 @@ export default class TestHelper {
   static doTest<TRequest, TResponse>(
     testDescribe: string,
     testCases: TestCase<TRequest,
-    TResponse>[]
+    TResponse>[],
   ) {
     // if testCases is not array, ends test
     if (!Array.isArray(testCases)) {
@@ -62,7 +62,7 @@ export default class TestHelper {
     expected: TResponse | cfddlcjs.InnerErrorResponse,
     setupFunc: () => void | null = () => undefined,
     teardownFunc: () => void | null = () => undefined,
-    convertFunc: () => void | null = null
+    convertFunc: () => void | null = null,
   ): TestCase<TRequest, TResponse> {
     return new TestCase(
       caseName,
@@ -71,16 +71,16 @@ export default class TestHelper {
       expected,
       setupFunc,
       teardownFunc,
-      convertFunc
+      convertFunc,
     );
   }
 
   static createIllegalArgumentError(
-    message: string
+    message: string,
   ): cfddlcjs.InnerErrorResponse {
     const error = {
       code: 1,
-      type: "illegal_argument",
+      type: 'illegal_argument',
       message,
     };
     return error;

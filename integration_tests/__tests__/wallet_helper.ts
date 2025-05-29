@@ -1,12 +1,12 @@
-import * as fs from "fs";
-import path from "path";
-import { NetworkType, WalletManager } from "wallet-for-testing-js";
+import * as fs from 'fs';
+import path from 'path';
+import { NetworkType, WalletManager } from 'wallet-for-testing-js';
 
 export class DlcWalletHelper {
   readonly network = NetworkType.Regtest;
-  readonly configFilePath = __dirname + "/bitcoin.conf";
+  readonly configFilePath = __dirname + '/bitcoin.conf';
   readonly testSeed =
-    "0e09fbdd00e575b654d480ae979f24da45ef4dee645c7dc2e3b30b2e093d38dda0202357754cc856f8920b8e31dd02e9d34f6a2b20dc825c6ba90f90009085e1";
+    '0e09fbdd00e575b654d480ae979f24da45ef4dee645c7dc2e3b30b2e093d38dda0202357754cc856f8920b8e31dd02e9d34f6a2b20dc825c6ba90f90009085e1';
   walletMgr: any;
   aliceWallet: any;
   bobWallet: any;
@@ -16,7 +16,7 @@ export class DlcWalletHelper {
   }
 
   public async Initialize() {
-    const dbDir = path.join(__dirname, "dbdir");
+    const dbDir = path.join(__dirname, 'dbdir');
     // initialize db dir
     try {
       fs.statSync(dbDir);
@@ -29,7 +29,7 @@ export class DlcWalletHelper {
       }
       fs.rmdirSync(dbDir);
     } catch (err) {
-      if (err.code !== "ENOENT") throw err;
+      if (err.code !== 'ENOENT') throw err;
     }
 
     try {
@@ -46,9 +46,9 @@ export class DlcWalletHelper {
       this.network,
     );
     await this.walletMgr.setMasterPrivkey(this.testSeed);
-    await this.walletMgr.initialize("bitcoin");
+    await this.walletMgr.initialize('bitcoin');
 
-    this.aliceWallet = await this.walletMgr.createWallet(1, "alice", "bitcoin");
-    this.bobWallet = await this.walletMgr.createWallet(2, "bob", "bitcoin");
+    this.aliceWallet = await this.walletMgr.createWallet(1, 'alice', 'bitcoin');
+    this.bobWallet = await this.walletMgr.createWallet(2, 'bob', 'bitcoin');
   }
 }

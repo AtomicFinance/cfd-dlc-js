@@ -1,0 +1,8 @@
+node_modules/
+build/
+wrap_js/build/
+examples/
+src/
+include/
+tools/
+*.json 

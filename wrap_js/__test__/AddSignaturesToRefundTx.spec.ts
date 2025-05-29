@@ -1,10 +1,10 @@
-import * as cfddlcjs from "../../index.js";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 const testCase = [
   TestHelper.createTestCase(
-    "AddSignaturesToRefundTx",
+    'AddSignaturesToRefundTx',
     cfddlcjs.AddSignaturesToRefundTx,
     {
       refundTxHex: TestData.RefundTransactionUnsigned,
@@ -18,8 +18,8 @@ const testCase = [
     },
     {
       hex: TestData.RefundTransactionSigned,
-    }
+    },
   ),
 ];
 
-TestHelper.doTest("AddSignaturesToCet", testCase);
+TestHelper.doTest('AddSignaturesToCet', testCase);

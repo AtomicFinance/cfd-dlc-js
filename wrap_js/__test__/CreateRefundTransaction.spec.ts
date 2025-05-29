@@ -1,18 +1,18 @@
-import * as cfddlcjs from "../../index.js";
-import * as CfdUtils from "../cfd_utils";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import * as CfdUtils from '../cfd_utils';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 const testCase = [
   TestHelper.createTestCase(
-    "CreateRefundTransaction",
+    'CreateRefundTransaction',
     cfddlcjs.CreateRefundTransaction,
     {
       localFinalScriptPubkey: CfdUtils.GetAddressScript(
-        TestData.LocalFinalAddress
+        TestData.LocalFinalAddress,
       ),
       remoteFinalScriptPubkey: CfdUtils.GetAddressScript(
-        TestData.RemoteFinalAddress
+        TestData.RemoteFinalAddress,
       ),
       localAmount: TestData.LocalCollateralAmount,
       remoteAmount: TestData.LocalCollateralAmount,
@@ -22,8 +22,8 @@ const testCase = [
     },
     {
       hex: TestData.RefundTransactionUnsigned,
-    }
+    },
   ),
 ];
 
-TestHelper.doTest("CreateRefundTransaction", testCase);
+TestHelper.doTest('CreateRefundTransaction', testCase);

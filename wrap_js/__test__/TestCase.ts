@@ -1,4 +1,4 @@
-import * as cfddlcjs from "../../index.js";
+import * as cfddlcjs from '../../index.js';
 /**
  * Express one test case.
  * This class has only fields for test execution.
@@ -30,7 +30,7 @@ export class TestCase<TRequest, TResponse> {
     expected,
     setupFunc,
     teardownFunc,
-    convertFunc
+    convertFunc,
   ) {
     // eslint-disable-line max-len
     this.testCaseName = caseName;

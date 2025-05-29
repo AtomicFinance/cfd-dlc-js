@@ -1,11 +1,11 @@
-import * as cfddlcjs from "../../index.js";
-import * as CfdUtils from "../cfd_utils";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import * as CfdUtils from '../cfd_utils';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 const testCase = [
   TestHelper.createTestCase(
-    "CreateDlcTransactions",
+    'CreateDlcTransactions',
     cfddlcjs.CreateDlcTransactions,
     {
       payouts: [
@@ -55,11 +55,11 @@ const testCase = [
       fundTxHex: TestData.FundTxHexUnsigned,
       cetsHex: [
         TestData.CetHexUnsigned,
-        "02000000019246862ea34db0833bd4bd9e657d61e2e5447d0438f6f6181d1cd329e8cf71c30000000000ffffffff02a0860100000000001600145dedfbf9ea599dd4e3ca6a80b333c472fd0b3f69603bea0b000000001600149652d86bedf43ad264362e6e6eba6eb76450812700000000",
+        '02000000019246862ea34db0833bd4bd9e657d61e2e5447d0438f6f6181d1cd329e8cf71c30000000000ffffffff02a0860100000000001600145dedfbf9ea599dd4e3ca6a80b333c472fd0b3f69603bea0b000000001600149652d86bedf43ad264362e6e6eba6eb76450812700000000',
       ],
       refundTxHex: TestData.RefundTransactionUnsigned,
-    }
+    },
   ),
 ];
 
-TestHelper.doTest("CreateDlcTransactions", testCase);
+TestHelper.doTest('CreateDlcTransactions', testCase);

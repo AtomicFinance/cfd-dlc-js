@@ -1,10 +1,10 @@
-import * as cfddlcjs from "../../index.js";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 function GetRequest(
   localChange = 4899999789,
-  remoteChange = 4899999789
+  remoteChange = 4899999789,
 ) {
   return {
     localPubkeys: [TestData.LocalFundPubkey, TestData.LocalFundPubkey2],
@@ -15,7 +15,7 @@ function GetRequest(
       return {
         ...input,
         maxWitnessLength: 108,
-      }
+      };
     }),
     localChange: {
       amount: localChange,
@@ -25,7 +25,7 @@ function GetRequest(
       return {
         ...input,
         maxWitnessLength: 108,
-      }
+      };
     }),
     remoteChange: {
       amount: remoteChange,
@@ -38,29 +38,29 @@ function GetRequest(
 
 const testCase = [
   TestHelper.createTestCase(
-    "CreateBatchFundTransaction",
+    'CreateBatchFundTransaction',
     cfddlcjs.CreateBatchFundTransaction,
     GetRequest(),
     {
       hex: TestData.BatchFundTxHexUnsigned,
-    }
+    },
   ),
 ];
 
 const errorCase = [
   TestHelper.createTestCase(
-    "CreateBatchFundTransaction invalid Pubkey",
+    'CreateBatchFundTransaction invalid Pubkey',
     cfddlcjs.CreateBatchFundTransaction,
-    { ...GetRequest(), localPubkeys: [""] },
-    TestHelper.createIllegalArgumentError("Invalid Pubkey data.")
+    { ...GetRequest(), localPubkeys: [''] },
+    TestHelper.createIllegalArgumentError('Invalid Pubkey data.'),
   ),
   TestHelper.createTestCase(
-    "CreateBatchFundTransaction invalid hex string(3 chars)",
+    'CreateBatchFundTransaction invalid hex string(3 chars)',
     cfddlcjs.CreateBatchFundTransaction,
-    { ...GetRequest(), localPubkeys: ["000"] },
-    TestHelper.createIllegalArgumentError("hex to byte convert error.")
+    { ...GetRequest(), localPubkeys: ['000'] },
+    TestHelper.createIllegalArgumentError('hex to byte convert error.'),
   ),
 ];
 
-TestHelper.doTest("CreateBatchFundTransaction", testCase);
-TestHelper.doTest("CreateBatchFundTransaction ErrorCase", errorCase);
+TestHelper.doTest('CreateBatchFundTransaction', testCase);
+TestHelper.doTest('CreateBatchFundTransaction ErrorCase', errorCase);

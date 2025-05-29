@@ -1,10 +1,10 @@
-import * as cfddlcjs from "../../index.js";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 const testCase = [
   TestHelper.createTestCase(
-    "VerifyCetAdaptorSignature Local",
+    'VerifyCetAdaptorSignature Local',
     cfddlcjs.VerifyCetAdaptorSignature,
     {
       cetHex: TestData.CetHexUnsigned,
@@ -21,10 +21,10 @@ const testCase = [
     },
     {
       valid: true,
-    }
+    },
   ),
   TestHelper.createTestCase(
-    "VerifyCetSignature Remote",
+    'VerifyCetSignature Remote',
     cfddlcjs.VerifyCetAdaptorSignature,
     {
       cetHex: TestData.CetHexUnsigned,
@@ -41,10 +41,10 @@ const testCase = [
     },
     {
       valid: true,
-    }
+    },
   ),
   TestHelper.createTestCase(
-    "VerifyCetSignature Bad Signature",
+    'VerifyCetSignature Bad Signature',
     cfddlcjs.VerifyCetAdaptorSignature,
     {
       cetHex: TestData.CetHexUnsigned,
@@ -53,7 +53,7 @@ const testCase = [
       fundTxId: TestData.FundTxId,
       fundInputAmount: TestData.FundInputAmount,
       adaptorSignature:
-        "007ae15ae89be929e7a022ec370e4edf9e7e8dca29e6ee8aa4a3b73596b8987caf798443cd661eeee26e5514e905479b5a3b352d3777ce9d8c8ecea130d50fe7ac",
+        '007ae15ae89be929e7a022ec370e4edf9e7e8dca29e6ee8aa4a3b73596b8987caf798443cd661eeee26e5514e905479b5a3b352d3777ce9d8c8ecea130d50fe7ac',
       adaptorProof: TestData.CetLocalAdaptorProof,
       oraclePubkey: TestData.OraclePubkey,
       oracleRValues: [TestData.OracleRPoint],
@@ -62,8 +62,8 @@ const testCase = [
     },
     {
       valid: false,
-    }
+    },
   ),
 ];
 
-TestHelper.doTest("VerifyCetSignature", testCase);
+TestHelper.doTest('VerifyCetSignature', testCase);

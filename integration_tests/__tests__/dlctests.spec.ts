@@ -1,7 +1,7 @@
-import * as CfdDlcUtils from "../../wrap_js/cfddlc_utils";
-import * as CfdUtils from "../../wrap_js/cfd_utils";
-import { DlcTestHelper } from "./test_helper";
-import { DlcWalletHelper } from "./wallet_helper";
+import * as CfdDlcUtils from '../../wrap_js/cfddlc_utils';
+import * as CfdUtils from '../../wrap_js/cfd_utils';
+import { DlcTestHelper } from './test_helper';
+import { DlcWalletHelper } from './wallet_helper';
 
 const SyncTimeout = 1000;
 
@@ -12,8 +12,8 @@ beforeAll(async () => {
   await walletHelper.Initialize();
 });
 
-describe("dlc tests", () => {
-  it.skip("test full execution", async () => {
+describe('dlc tests', () => {
+  it.skip('test full execution', async () => {
     const testHelper = new DlcTestHelper(
       walletHelper.aliceWallet,
       walletHelper.bobWallet
@@ -180,7 +180,7 @@ describe("dlc tests", () => {
     expect(bobFinalBalance.bitcoin).toBe(Number(testHelper.loseAmount));
   });
 
-  it.skip("test refund", async () => {
+  it.skip('test refund', async () => {
     const testHelper = new DlcTestHelper(
       walletHelper.aliceWallet,
       walletHelper.bobWallet

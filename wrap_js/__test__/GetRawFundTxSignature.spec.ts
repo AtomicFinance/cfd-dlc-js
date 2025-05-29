@@ -1,10 +1,10 @@
-import * as cfddlcjs from "../../index.js";
-import TestHelper from "./TestHelper";
-import * as TestData from "./data/TestData";
+import * as cfddlcjs from '../../index.js';
+import TestHelper from './TestHelper';
+import * as TestData from './data/TestData';
 
 const testCase = [
   TestHelper.createTestCase(
-    "GetRawFundTxSignature",
+    'GetRawFundTxSignature',
     cfddlcjs.GetRawFundTxSignature,
     {
       fundTxHex: TestData.FundTxHexUnsigned,
@@ -15,8 +15,8 @@ const testCase = [
     },
     {
       hex: TestData.FundTxLocalRawSignature,
-    }
+    },
   ),
 ];
 
-TestHelper.doTest("GetRawFundTxSignature", testCase);
+TestHelper.doTest('GetRawFundTxSignature', testCase);

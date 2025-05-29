@@ -1,5 +1,5 @@
-import * as cfddlcjs from "../index.js";
-import * as CfdUtils from "./cfd_utils";
+import * as cfddlcjs from '../index.js';
+import * as CfdUtils from './cfd_utils';
 
 function MessagesToMessagesList(input: string[][]): cfddlcjs.Messages[] {
   return input.map((x) => {
@@ -12,7 +12,7 @@ function MessagesToMessagesList(input: string[][]): cfddlcjs.Messages[] {
 export function SignFundTransactionInput(
   transaction: string,
   input: any,
-  prv: any
+  prv: any,
 ) {
   const reqJson = {
     fundTxHex: transaction,
@@ -33,7 +33,7 @@ export function SignCet(
   prv: string,
   oracleSignatures: string[],
   localFundPubkey: string,
-  remoteFundPubkey: string
+  remoteFundPubkey: string,
 ): string {
   const reqJson: cfddlcjs.SignCetRequest = {
     cetHex: transaction,
@@ -55,7 +55,7 @@ export function SignRefundTransaction(
   fundTxId: string,
   fundInputAmount: number,
   prv1: string,
-  prv2: string
+  prv2: string,
 ) {
   let reqJson: cfddlcjs.GetRawRefundTxSignatureRequest = {
     refundTxHex: transaction,
@@ -107,7 +107,7 @@ export function CreateCetAdaptorSignatures(
   fundVout: number,
   fundInputAmount: number,
   localFundPubkey: string,
-  remoteFundPubkey: string
+  remoteFundPubkey: string,
 ) {
   const req: cfddlcjs.CreateCetAdaptorSignaturesRequest = {
     cetsHex: cets,
@@ -135,7 +135,7 @@ export function VerifyAdaptorSignatures(
   remoteFundPubkey: string,
   fundTxId: string,
   fundInputAmount: number,
-  verifyRemote: boolean
+  verifyRemote: boolean,
 ) {
   const req: cfddlcjs.VerifyCetAdaptorSignaturesRequest = {
     cetsHex: cets,

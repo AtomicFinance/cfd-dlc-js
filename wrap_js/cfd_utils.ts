@@ -1,4 +1,4 @@
-import * as cfdjs from "cfd-js";
+import * as cfdjs from 'cfd-js';
 
 export function GetPubkeyFromPrivkey(privkey: string) {
   const reqPrivKey = {
@@ -18,7 +18,7 @@ export function GetSchnorrPubkeyFromPrivkey(privkey: string) {
 export function GetExtPubFromExtPriv(extPriv: string) {
   const reqJson = {
     extkey: extPriv,
-    network: "testnet",
+    network: 'testnet',
   };
 
   const resp = cfdjs.CreateExtPubkey(reqJson);
@@ -28,7 +28,7 @@ export function GetExtPubFromExtPriv(extPriv: string) {
 export function GetPrivKeyFromExtPriv(extPriv: string) {
   const reqJson = {
     extkey: extPriv,
-    network: "testnet",
+    network: 'testnet',
     wif: false,
     isCompressed: true,
   };
@@ -45,16 +45,16 @@ export function GetPubkeyFromExtPriv(extPriv: string) {
 export function GetChildPrivKeyFromExtPriv(extPriv: string, index: number) {
   const reqJson: cfdjs.CreateExtkeyFromParentPathRequest = {
     extkey: extPriv,
-    network: "regtest",
+    network: 'regtest',
     path: `m/0/${index}`,
-    extkeyType: "extPrivkey",
+    extkeyType: 'extPrivkey',
     childNumberArray: [],
   };
   const extChild = cfdjs.CreateExtkeyFromParentPath(reqJson).extkey;
 
   const reqJson2: cfdjs.GetPrivkeyFromExtkeyRequest = {
     extkey: extChild,
-    network: "regtest",
+    network: 'regtest',
     wif: false,
     isCompressed: false,
   };
@@ -66,13 +66,13 @@ export function GetChildPrivKeyFromExtPriv(extPriv: string, index: number) {
 export function GetAddressFromPubkey(pubkey: string) {
   const data: cfdjs.HashKeyData = {
     hex: pubkey,
-    type: "pubkey",
+    type: 'pubkey',
   };
   const reqJson: cfdjs.CreateAddressRequest = {
     isElements: false,
     keyData: data,
-    network: "regtest",
-    hashType: "p2wpkh",
+    network: 'regtest',
+    hashType: 'p2wpkh',
   };
 
   return cfdjs.CreateAddress(reqJson).address;
@@ -87,7 +87,7 @@ export function GetPrivkeyFromWif(wif: string) {
 }
 
 export function DecodeRawTransaction(
-  rawTransaction: string
+  rawTransaction: string,
 ): cfdjs.DecodeRawTransactionResponse {
   const reqJson: cfdjs.DecodeRawTransactionRequest = {
     hex: rawTransaction,
@@ -108,7 +108,7 @@ export function SchnorrSign(
   privkey: string,
   nonceOrAux: string,
   isHashed = false,
-  isNonce = true
+  isNonce = true,
 ) {
   const req: cfdjs.SchnorrSignRequest = {
     privkey,
@@ -124,7 +124,7 @@ export function SchnorrSign(
 export function SchnorrVerify(
   message: string,
   signature: string,
-  pubkey: string
+  pubkey: string,
 ) {
   const req = {
     message,
