@@ -99,7 +99,7 @@
   "license": "MIT",
   "gypfile": false,
   "dependencies": {
-    "big-integer": "^1.6.26",
+    "big-integer": "^1.6.52",
     "cmake-js": "6.3.2",
     "nan": "^2.22.2",
     "node-abi": "^3.71.0",
