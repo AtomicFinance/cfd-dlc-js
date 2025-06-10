@@ -113,7 +113,7 @@
     "@types/jest": "^25.1.4",
     "@types/node": "^22.15.28",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
-    "@typescript-eslint/parser": "^4.22.1",
+    "@typescript-eslint/parser": "^8.34.0",
     "cfd-js": "github:atomicfinance/cfd-js#v0.4.12",
     "cross-env": "^7.0.3",
     "eslint": "^6.5.1",
