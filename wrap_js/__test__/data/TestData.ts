@@ -26,6 +26,17 @@ export const LocalCollateralAmount = 100000000;
 export const RemoteCollateralAmount = 100000000;
 export const LocalCollateralAmount2 = 100000000;
 export const RemoteCollateralAmount2 = 100000000;
+export const LocalChange = LocalInputAmount - LocalCollateralAmount - 1000; // minus fee
+export const RemoteChange = RemoteInputAmount - RemoteCollateralAmount - 1000; // minus fee
+export const LocalPayoutSerialId = 0;
+export const LocalChangeSerialId = 0;
+export const RemotePayoutSerialId = 0;
+export const RemoteChangeSerialId = 0;
+export const RefundLocktime = 100;
+export const FeeRate = 1;
+export const FundLockTime = 0;
+export const CetLockTime = 0;
+export const FundOutputSerialId = 0;
 export const FundInputAmount = 200000170;
 export const FundInputAmount1 = 100000085;
 export const FundInputAmount2 = 100000085;
@@ -49,12 +60,18 @@ export const LocalInputs = [
   {
     txid: "83266d6b22a9babf6ee469b88fd0d3a0c690525f7c903aff22ec8ee44214604f",
     vout: 0,
+    maxWitnessLength: 108,
+    redeemScript: "",
+    inputSerialId: 0,
   },
 ];
 export const RemoteInputs = [
   {
     txid: "bc92a22f07ef23c53af343397874b59f5f8c0eb37753af1d1a159a2177d4bb98",
     vout: 0,
+    maxWitnessLength: 108,
+    redeemScript: "",
+    inputSerialId: 0,
   },
 ];
 export const LocalChangeAddress = "bcrt1qlgmznucxpdkp5k3ktsct7eh6qrc4tju7ktjukn";
@@ -108,3 +125,9 @@ export const RefundTransactionLocalRawSignature =
   "4d7d24af8714835eead1143e5f589675c9e3b68d911ed5cbaaaa207586dac8e759a1febe7e12864a9ac59167510ffddfeed0f75920f611263e90b2068df52dbe";
 export const RefundTransactionRemoteRawSignature =
   "325b227c84d65a29d6f932f149af7fd6849237bc9d5dec09771d68f75dacb85e2b8b0074f0804850ae4bdca21d139681d971117a669aae3385fb72acaa2feaee";
+
+// Script pubkeys calculated from addresses
+export const LocalFinalScriptPubkey = CfdUtils.GetAddressScript(LocalFinalAddress);
+export const RemoteFinalScriptPubkey = CfdUtils.GetAddressScript(RemoteFinalAddress);
+export const LocalChangeScriptPubkey = CfdUtils.GetAddressScript(LocalChangeAddress);
+export const RemoteChangeScriptPubkey = CfdUtils.GetAddressScript(RemoteChangeAddress);

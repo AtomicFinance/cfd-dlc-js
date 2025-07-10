@@ -196,6 +196,16 @@ JsonMappingApi::CreateDlcTransactions(const std::string &request_message) {
 }
 
 std::string
+JsonMappingApi::CreateSplicedDlcTransactions(const std::string &request_message) {
+  return ExecuteJsonApi<
+    api::json::CreateSplicedDlcTransactionsRequest,
+    api::json::CreateSplicedDlcTransactionsResponse,
+    api::CreateSplicedDlcTransactionsRequestStruct,
+    api::CreateSplicedDlcTransactionsResponseStruct>(
+    request_message, DlcTransactionsApi::CreateSplicedDlcTransactions);
+}
+
+std::string
 JsonMappingApi::CreateBatchDlcTransactions(const std::string &request_message) {
   return ExecuteJsonApi<
     api::json::CreateBatchDlcTransactionsRequest,
@@ -282,6 +292,36 @@ JsonMappingApi::VerifyRefundTxSignature(const std::string &request_message) {
     request_message, DlcTransactionsApi::VerifyRefundTxSignature);
 }
 
+std::string
+JsonMappingApi::SignDlcFundingInput(const std::string &request_message) {
+  return ExecuteJsonApi<
+    api::json::SignDlcFundingInputRequest,
+    api::json::SignDlcFundingInputResponse,
+    api::SignDlcFundingInputRequestStruct,
+    api::SignDlcFundingInputResponseStruct>(
+    request_message, DlcTransactionsApi::SignDlcFundingInput);
+}
+
+std::string
+JsonMappingApi::GetRawDlcFundingInputSignature(const std::string &request_message) {
+  return ExecuteJsonApi<
+    api::json::GetRawDlcFundingInputSignatureRequest,
+    api::json::GetRawDlcFundingInputSignatureResponse,
+    api::GetRawDlcFundingInputSignatureRequestStruct,
+    api::GetRawDlcFundingInputSignatureResponseStruct>(
+    request_message, DlcTransactionsApi::GetRawDlcFundingInputSignature);
+}
+
+std::string
+JsonMappingApi::VerifyDlcFundingInputSignature(const std::string &request_message) {
+  return ExecuteJsonApi<
+    api::json::VerifyDlcFundingInputSignatureRequest,
+    api::json::VerifyDlcFundingInputSignatureResponse,
+    api::VerifyDlcFundingInputSignatureRequestStruct,
+    api::VerifyDlcFundingInputSignatureResponseStruct>(
+    request_message, DlcTransactionsApi::VerifyDlcFundingInputSignature);
+}
+
 void JsonMappingApi::LoadFunctions(
   RequestFunctionMap *request_map, ResponseOnlyFunctionMap *response_only_map) {
   // if (response_only_map != nullptr) {
@@ -309,6 +349,8 @@ void JsonMappingApi::LoadFunctions(
     request_map->emplace(
       "CreateDlcTransactions", JsonMappingApi::CreateDlcTransactions);
     request_map->emplace(
+      "CreateSplicedDlcTransactions", JsonMappingApi::CreateSplicedDlcTransactions);
+    request_map->emplace(
       "CreateBatchDlcTransactions", JsonMappingApi::CreateBatchDlcTransactions);
     request_map->emplace(
       "CreateCetAdaptorSignature", JsonMappingApi::CreateCetAdaptorSignature);
@@ -325,6 +367,12 @@ void JsonMappingApi::LoadFunctions(
       "AddSignaturesToRefundTx", JsonMappingApi::AddSignaturesToRefundTx);
     request_map->emplace(
       "VerifyRefundTxSignature", JsonMappingApi::VerifyRefundTxSignature);
+    request_map->emplace(
+      "SignDlcFundingInput", JsonMappingApi::SignDlcFundingInput);
+    request_map->emplace(
+      "GetRawDlcFundingInputSignature", JsonMappingApi::GetRawDlcFundingInputSignature);
+    request_map->emplace(
+      "VerifyDlcFundingInputSignature", JsonMappingApi::VerifyDlcFundingInputSignature);
   }
 }
 

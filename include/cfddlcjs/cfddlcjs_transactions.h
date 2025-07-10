@@ -70,6 +70,14 @@ class DlcTransactionsApi {
   AddSignaturesToRefundTx(const AddSignaturesToRefundTxRequestStruct &request);
   static VerifyRefundTxSignatureResponseStruct
   VerifyRefundTxSignature(const VerifyRefundTxSignatureRequestStruct &request);
+  static CreateSplicedDlcTransactionsResponseStruct
+  CreateSplicedDlcTransactions(const CreateSplicedDlcTransactionsRequestStruct &request);
+  static SignDlcFundingInputResponseStruct
+  SignDlcFundingInput(const SignDlcFundingInputRequestStruct &request);
+  static GetRawDlcFundingInputSignatureResponseStruct
+  GetRawDlcFundingInputSignature(const GetRawDlcFundingInputSignatureRequestStruct &request);
+  static VerifyDlcFundingInputSignatureResponseStruct
+  VerifyDlcFundingInputSignature(const VerifyDlcFundingInputSignatureRequestStruct &request);
 
  private:
   DlcTransactionsApi();

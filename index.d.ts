@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable indent */
-
 export interface AdaptorPair {
     signature: string;
     proof: string;
@@ -160,8 +159,10 @@ export interface CreateDlcTransactionsRequest {
     remoteChangeSerialId: (bigint | number);
     refundLocktime: (bigint | number);
     localInputs: TxInInfoRequest[];
+    localDlcInputs?: DlcInputInfoRequest[];
     localChangeScriptPubkey: string;
     remoteInputs: TxInInfoRequest[];
+    remoteDlcInputs?: DlcInputInfoRequest[];
     remoteChangeScriptPubkey: string;
     feeRate: number;
     cetLockTime?: (bigint | number);
@@ -214,8 +215,69 @@ export interface CreateRefundTransactionResponse {
     hex: string;
 }
 
+/** Create Spliced Dlc transactions */
+export interface CreateSplicedDlcTransactionsRequest {
+    payouts: PayoutRequest[];
+    localFundPubkey: string;
+    localFinalScriptPubkey: string;
+    remoteFundPubkey: string;
+    remoteFinalScriptPubkey: string;
+    localInputAmount: (bigint | number);
+    localCollateralAmount: (bigint | number);
+    localPayoutSerialId: (bigint | number);
+    localChangeSerialId: (bigint | number);
+    remoteInputAmount: (bigint | number);
+    remoteCollateralAmount: (bigint | number);
+    remotePayoutSerialId: (bigint | number);
+    remoteChangeSerialId: (bigint | number);
+    refundLocktime: (bigint | number);
+    localInputs: TxInInfoRequest[];
+    localDlcInputs?: DlcInputInfoRequest[];
+    localChangeScriptPubkey: string;
+    remoteInputs: TxInInfoRequest[];
+    remoteDlcInputs?: DlcInputInfoRequest[];
+    remoteChangeScriptPubkey: string;
+    feeRate: number;
+    cetLockTime?: (bigint | number);
+    fundLockTime?: (bigint | number);
+    fundOutputSerialId?: (bigint | number);
+    optionDest?: string;
+    optionPremium?: (bigint | number);
+}
+
+export interface CreateSplicedDlcTransactionsResponse {
+    fundTxHex: string;
+    cetsHex: string[];
+    refundTxHex: string;
+}
+
+export interface DlcInputInfoRequest {
+    fundTxid: string;
+    fundVout: number;
+    fundAmount: (bigint | number);
+    localFundPubkey: string;
+    remoteFundPubkey: string;
+    maxWitnessLength: number;
+    inputSerialId?: (bigint | number);
+}
+
 export interface ErrorResponse {
     error: InnerErrorResponse;
+}
+
+/** Get raw DLC funding input signature */
+export interface GetRawDlcFundingInputSignatureRequest {
+    fundTxHex: string;
+    fundTxid: string;
+    fundVout: number;
+    fundAmount: (bigint | number);
+    localFundPubkey: string;
+    remoteFundPubkey: string;
+    privkey: string;
+}
+
+export interface GetRawDlcFundingInputSignatureResponse {
+    hex: string;
 }
 
 /** Get a signature for a fund transaction input */
@@ -275,6 +337,22 @@ export interface SignCetRequest {
 }
 
 export interface SignCetResponse {
+    hex: string;
+}
+
+/** Sign DLC funding input */
+export interface SignDlcFundingInputRequest {
+    fundTxHex: string;
+    fundTxid: string;
+    fundVout: number;
+    fundAmount: (bigint | number);
+    localFundPubkey: string;
+    remoteFundPubkey: string;
+    localPrivkey: string;
+    remoteSignature: string;
+}
+
+export interface SignDlcFundingInputResponse {
     hex: string;
 }
 
@@ -340,6 +418,22 @@ export interface VerifyCetAdaptorSignaturesRequest {
 }
 
 export interface VerifyCetAdaptorSignaturesResponse {
+    valid: boolean;
+}
+
+/** Verify DLC funding input signature */
+export interface VerifyDlcFundingInputSignatureRequest {
+    fundTxHex: string;
+    fundTxid: string;
+    fundVout: number;
+    fundAmount: (bigint | number);
+    localFundPubkey: string;
+    remoteFundPubkey: string;
+    signature: string;
+    pubkey: string;
+}
+
+export interface VerifyDlcFundingInputSignatureResponse {
     valid: boolean;
 }
 
@@ -434,6 +528,18 @@ export function CreateFundTransaction(jsonObject: CreateFundTransactionRequest):
 export function CreateRefundTransaction(jsonObject: CreateRefundTransactionRequest): CreateRefundTransactionResponse;
 
 /**
+ * @param {CreateSplicedDlcTransactionsRequest} jsonObject - request data.
+ * @return {CreateSplicedDlcTransactionsResponse} - response data.
+ */
+export function CreateSplicedDlcTransactions(jsonObject: CreateSplicedDlcTransactionsRequest): CreateSplicedDlcTransactionsResponse;
+
+/**
+ * @param {GetRawDlcFundingInputSignatureRequest} jsonObject - request data.
+ * @return {GetRawDlcFundingInputSignatureResponse} - response data.
+ */
+export function GetRawDlcFundingInputSignature(jsonObject: GetRawDlcFundingInputSignatureRequest): GetRawDlcFundingInputSignatureResponse;
+
+/**
  * @param {GetRawFundTxSignatureRequest} jsonObject - request data.
  * @return {GetRawFundTxSignatureResponse} - response data.
  */
@@ -452,6 +558,12 @@ export function GetRawRefundTxSignature(jsonObject: GetRawRefundTxSignatureReque
 export function SignCet(jsonObject: SignCetRequest): SignCetResponse;
 
 /**
+ * @param {SignDlcFundingInputRequest} jsonObject - request data.
+ * @return {SignDlcFundingInputResponse} - response data.
+ */
+export function SignDlcFundingInput(jsonObject: SignDlcFundingInputRequest): SignDlcFundingInputResponse;
+
+/**
  * @param {SignFundTransactionRequest} jsonObject - request data.
  * @return {SignFundTransactionResponse} - response data.
  */
@@ -468,6 +580,12 @@ export function VerifyCetAdaptorSignature(jsonObject: VerifyCetAdaptorSignatureR
  * @return {VerifyCetAdaptorSignaturesResponse} - response data.
  */
 export function VerifyCetAdaptorSignatures(jsonObject: VerifyCetAdaptorSignaturesRequest): VerifyCetAdaptorSignaturesResponse;
+
+/**
+ * @param {VerifyDlcFundingInputSignatureRequest} jsonObject - request data.
+ * @return {VerifyDlcFundingInputSignatureResponse} - response data.
+ */
+export function VerifyDlcFundingInputSignature(jsonObject: VerifyDlcFundingInputSignatureRequest): VerifyDlcFundingInputSignatureResponse;
 
 /**
  * @param {VerifyFundTxSignatureRequest} jsonObject - request data.

@@ -45,6 +45,23 @@ struct AdaptorPairStruct {
 };
 
 // ------------------------------------------------------------------------
+// DlcInputInfoRequestStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief DlcInputInfoRequestStruct struct
+ */
+struct DlcInputInfoRequestStruct {
+  std::string fund_txid = "";           //!< fund_txid  // NOLINT
+  uint32_t fund_vout = 0;               //!< fund_vout  // NOLINT
+  uint64_t fund_amount = 0;             //!< fund_amount  // NOLINT
+  std::string local_fund_pubkey = "";   //!< local_fund_pubkey  // NOLINT
+  std::string remote_fund_pubkey = "";  //!< remote_fund_pubkey  // NOLINT
+  uint32_t max_witness_length = 220;    //!< max_witness_length  // NOLINT
+  uint64_t input_serial_id = 0;         //!< input_serial_id  // NOLINT
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
 // MessagesStruct
 // ------------------------------------------------------------------------
 /**
@@ -52,6 +69,18 @@ struct AdaptorPairStruct {
  */
 struct MessagesStruct {
   std::vector<std::string> messages;  //!< messages  // NOLINT
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// PayoutRequestStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief PayoutRequestStruct struct
+ */
+struct PayoutRequestStruct {
+  uint64_t local = 0;   //!< local  // NOLINT
+  uint64_t remote = 0;  //!< remote  // NOLINT
   std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
 };
 
@@ -318,48 +347,38 @@ struct CreateCetAdaptorSignaturesResponseStruct {
 };
 
 // ------------------------------------------------------------------------
-// PayoutRequestStruct
-// ------------------------------------------------------------------------
-/**
- * @brief PayoutRequestStruct struct
- */
-struct PayoutRequestStruct {
-  uint64_t local = 0;   //!< local  // NOLINT
-  uint64_t remote = 0;  //!< remote  // NOLINT
-  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
-};
-
-// ------------------------------------------------------------------------
 // CreateDlcTransactionsRequestStruct
 // ------------------------------------------------------------------------
 /**
  * @brief CreateDlcTransactionsRequestStruct struct
  */
 struct CreateDlcTransactionsRequestStruct {
-  std::vector<PayoutRequestStruct> payouts;          //!< payouts  // NOLINT
-  std::string local_fund_pubkey = "";                //!< local_fund_pubkey  // NOLINT
-  std::string local_final_script_pubkey = "";        //!< local_final_script_pubkey  // NOLINT
-  std::string remote_fund_pubkey = "";               //!< remote_fund_pubkey  // NOLINT
-  std::string remote_final_script_pubkey = "";       //!< remote_final_script_pubkey  // NOLINT
-  uint64_t local_input_amount = 0;                   //!< local_input_amount  // NOLINT
-  uint64_t local_collateral_amount = 0;              //!< local_collateral_amount  // NOLINT
-  uint64_t local_payout_serial_id = 0;               //!< local_payout_serial_id  // NOLINT
-  uint64_t local_change_serial_id = 0;               //!< local_change_serial_id  // NOLINT
-  uint64_t remote_input_amount = 0;                  //!< remote_input_amount  // NOLINT
-  uint64_t remote_collateral_amount = 0;             //!< remote_collateral_amount  // NOLINT
-  uint64_t remote_payout_serial_id = 0;              //!< remote_payout_serial_id  // NOLINT
-  uint64_t remote_change_serial_id = 0;              //!< remote_change_serial_id  // NOLINT
-  uint64_t refund_locktime = 0;                      //!< refund_locktime  // NOLINT
-  std::vector<TxInInfoRequestStruct> local_inputs;   //!< local_inputs  // NOLINT
-  std::string local_change_script_pubkey = "";       //!< local_change_script_pubkey  // NOLINT
-  std::vector<TxInInfoRequestStruct> remote_inputs;  //!< remote_inputs  // NOLINT
-  std::string remote_change_script_pubkey = "";      //!< remote_change_script_pubkey  // NOLINT
-  uint32_t fee_rate = 0;                             //!< fee_rate  // NOLINT
-  uint64_t cet_lock_time = 0;                        //!< cet_lock_time  // NOLINT
-  uint64_t fund_lock_time = 0;                       //!< fund_lock_time  // NOLINT
-  uint64_t fund_output_serial_id = 0;                //!< fund_output_serial_id  // NOLINT
-  std::string option_dest = "";                      //!< option_dest  // NOLINT
-  uint64_t option_premium = 0;                       //!< option_premium  // NOLINT
+  std::vector<PayoutRequestStruct> payouts;                  //!< payouts  // NOLINT
+  std::string local_fund_pubkey = "";                        //!< local_fund_pubkey  // NOLINT
+  std::string local_final_script_pubkey = "";                //!< local_final_script_pubkey  // NOLINT
+  std::string remote_fund_pubkey = "";                       //!< remote_fund_pubkey  // NOLINT
+  std::string remote_final_script_pubkey = "";               //!< remote_final_script_pubkey  // NOLINT
+  uint64_t local_input_amount = 0;                           //!< local_input_amount  // NOLINT
+  uint64_t local_collateral_amount = 0;                      //!< local_collateral_amount  // NOLINT
+  uint64_t local_payout_serial_id = 0;                       //!< local_payout_serial_id  // NOLINT
+  uint64_t local_change_serial_id = 0;                       //!< local_change_serial_id  // NOLINT
+  uint64_t remote_input_amount = 0;                          //!< remote_input_amount  // NOLINT
+  uint64_t remote_collateral_amount = 0;                     //!< remote_collateral_amount  // NOLINT
+  uint64_t remote_payout_serial_id = 0;                      //!< remote_payout_serial_id  // NOLINT
+  uint64_t remote_change_serial_id = 0;                      //!< remote_change_serial_id  // NOLINT
+  uint64_t refund_locktime = 0;                              //!< refund_locktime  // NOLINT
+  std::vector<TxInInfoRequestStruct> local_inputs;           //!< local_inputs  // NOLINT
+  std::vector<DlcInputInfoRequestStruct> local_dlc_inputs;   //!< local_dlc_inputs  // NOLINT
+  std::string local_change_script_pubkey = "";               //!< local_change_script_pubkey  // NOLINT
+  std::vector<TxInInfoRequestStruct> remote_inputs;          //!< remote_inputs  // NOLINT
+  std::vector<DlcInputInfoRequestStruct> remote_dlc_inputs;  //!< remote_dlc_inputs  // NOLINT
+  std::string remote_change_script_pubkey = "";              //!< remote_change_script_pubkey  // NOLINT
+  uint32_t fee_rate = 0;                                     //!< fee_rate  // NOLINT
+  uint64_t cet_lock_time = 0;                                //!< cet_lock_time  // NOLINT
+  uint64_t fund_lock_time = 0;                               //!< fund_lock_time  // NOLINT
+  uint64_t fund_output_serial_id = 0;                        //!< fund_output_serial_id  // NOLINT
+  std::string option_dest = "";                              //!< option_dest  // NOLINT
+  uint64_t option_premium = 0;                               //!< option_premium  // NOLINT
   std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
 };
 
@@ -437,6 +456,85 @@ struct CreateRefundTransactionRequestStruct {
  * @brief CreateRefundTransactionResponseStruct struct
  */
 struct CreateRefundTransactionResponseStruct {
+  std::string hex = "";  //!< hex  // NOLINT
+  cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// CreateSplicedDlcTransactionsRequestStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief CreateSplicedDlcTransactionsRequestStruct struct
+ */
+struct CreateSplicedDlcTransactionsRequestStruct {
+  std::vector<PayoutRequestStruct> payouts;                  //!< payouts  // NOLINT
+  std::string local_fund_pubkey = "";                        //!< local_fund_pubkey  // NOLINT
+  std::string local_final_script_pubkey = "";                //!< local_final_script_pubkey  // NOLINT
+  std::string remote_fund_pubkey = "";                       //!< remote_fund_pubkey  // NOLINT
+  std::string remote_final_script_pubkey = "";               //!< remote_final_script_pubkey  // NOLINT
+  uint64_t local_input_amount = 0;                           //!< local_input_amount  // NOLINT
+  uint64_t local_collateral_amount = 0;                      //!< local_collateral_amount  // NOLINT
+  uint64_t local_payout_serial_id = 0;                       //!< local_payout_serial_id  // NOLINT
+  uint64_t local_change_serial_id = 0;                       //!< local_change_serial_id  // NOLINT
+  uint64_t remote_input_amount = 0;                          //!< remote_input_amount  // NOLINT
+  uint64_t remote_collateral_amount = 0;                     //!< remote_collateral_amount  // NOLINT
+  uint64_t remote_payout_serial_id = 0;                      //!< remote_payout_serial_id  // NOLINT
+  uint64_t remote_change_serial_id = 0;                      //!< remote_change_serial_id  // NOLINT
+  uint64_t refund_locktime = 0;                              //!< refund_locktime  // NOLINT
+  std::vector<TxInInfoRequestStruct> local_inputs;           //!< local_inputs  // NOLINT
+  std::vector<DlcInputInfoRequestStruct> local_dlc_inputs;   //!< local_dlc_inputs  // NOLINT
+  std::string local_change_script_pubkey = "";               //!< local_change_script_pubkey  // NOLINT
+  std::vector<TxInInfoRequestStruct> remote_inputs;          //!< remote_inputs  // NOLINT
+  std::vector<DlcInputInfoRequestStruct> remote_dlc_inputs;  //!< remote_dlc_inputs  // NOLINT
+  std::string remote_change_script_pubkey = "";              //!< remote_change_script_pubkey  // NOLINT
+  uint32_t fee_rate = 0;                                     //!< fee_rate  // NOLINT
+  uint64_t cet_lock_time = 0;                                //!< cet_lock_time  // NOLINT
+  uint64_t fund_lock_time = 0;                               //!< fund_lock_time  // NOLINT
+  uint64_t fund_output_serial_id = 0;                        //!< fund_output_serial_id  // NOLINT
+  std::string option_dest = "";                              //!< option_dest  // NOLINT
+  uint64_t option_premium = 0;                               //!< option_premium  // NOLINT
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// CreateSplicedDlcTransactionsResponseStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief CreateSplicedDlcTransactionsResponseStruct struct
+ */
+struct CreateSplicedDlcTransactionsResponseStruct {
+  std::string fund_tx_hex = "";       //!< fund_tx_hex  // NOLINT
+  std::vector<std::string> cets_hex;  //!< cets_hex  // NOLINT
+  std::string refund_tx_hex = "";     //!< refund_tx_hex  // NOLINT
+  cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// GetRawDlcFundingInputSignatureRequestStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief GetRawDlcFundingInputSignatureRequestStruct struct
+ */
+struct GetRawDlcFundingInputSignatureRequestStruct {
+  std::string fund_tx_hex = "";         //!< fund_tx_hex  // NOLINT
+  std::string fund_txid = "";           //!< fund_txid  // NOLINT
+  uint32_t fund_vout = 0;               //!< fund_vout  // NOLINT
+  uint64_t fund_amount = 0;             //!< fund_amount  // NOLINT
+  std::string local_fund_pubkey = "";   //!< local_fund_pubkey  // NOLINT
+  std::string remote_fund_pubkey = "";  //!< remote_fund_pubkey  // NOLINT
+  std::string privkey = "";             //!< privkey  // NOLINT
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// GetRawDlcFundingInputSignatureResponseStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief GetRawDlcFundingInputSignatureResponseStruct struct
+ */
+struct GetRawDlcFundingInputSignatureResponseStruct {
   std::string hex = "";  //!< hex  // NOLINT
   cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
   std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
@@ -524,6 +622,36 @@ struct SignCetRequestStruct {
  * @brief SignCetResponseStruct struct
  */
 struct SignCetResponseStruct {
+  std::string hex = "";  //!< hex  // NOLINT
+  cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// SignDlcFundingInputRequestStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief SignDlcFundingInputRequestStruct struct
+ */
+struct SignDlcFundingInputRequestStruct {
+  std::string fund_tx_hex = "";         //!< fund_tx_hex  // NOLINT
+  std::string fund_txid = "";           //!< fund_txid  // NOLINT
+  uint32_t fund_vout = 0;               //!< fund_vout  // NOLINT
+  uint64_t fund_amount = 0;             //!< fund_amount  // NOLINT
+  std::string local_fund_pubkey = "";   //!< local_fund_pubkey  // NOLINT
+  std::string remote_fund_pubkey = "";  //!< remote_fund_pubkey  // NOLINT
+  std::string local_privkey = "";       //!< local_privkey  // NOLINT
+  std::string remote_signature = "";    //!< remote_signature  // NOLINT
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// SignDlcFundingInputResponseStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief SignDlcFundingInputResponseStruct struct
+ */
+struct SignDlcFundingInputResponseStruct {
   std::string hex = "";  //!< hex  // NOLINT
   cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
   std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
@@ -618,6 +746,36 @@ struct VerifyCetAdaptorSignaturesRequestStruct {
  * @brief VerifyCetAdaptorSignaturesResponseStruct struct
  */
 struct VerifyCetAdaptorSignaturesResponseStruct {
+  bool valid = false;  //!< valid  // NOLINT
+  cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// VerifyDlcFundingInputSignatureRequestStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief VerifyDlcFundingInputSignatureRequestStruct struct
+ */
+struct VerifyDlcFundingInputSignatureRequestStruct {
+  std::string fund_tx_hex = "";         //!< fund_tx_hex  // NOLINT
+  std::string fund_txid = "";           //!< fund_txid  // NOLINT
+  uint32_t fund_vout = 0;               //!< fund_vout  // NOLINT
+  uint64_t fund_amount = 0;             //!< fund_amount  // NOLINT
+  std::string local_fund_pubkey = "";   //!< local_fund_pubkey  // NOLINT
+  std::string remote_fund_pubkey = "";  //!< remote_fund_pubkey  // NOLINT
+  std::string signature = "";           //!< signature  // NOLINT
+  std::string pubkey = "";              //!< pubkey  // NOLINT
+  std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
+};
+
+// ------------------------------------------------------------------------
+// VerifyDlcFundingInputSignatureResponseStruct
+// ------------------------------------------------------------------------
+/**
+ * @brief VerifyDlcFundingInputSignatureResponseStruct struct
+ */
+struct VerifyDlcFundingInputSignatureResponseStruct {
   bool valid = false;  //!< valid  // NOLINT
   cfd::dlc::js::api::InnerErrorResponseStruct error;   //!< error information
   std::set<std::string> ignore_items;   //!< using on JSON mapping convert.
