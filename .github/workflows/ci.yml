@@ -142,7 +142,7 @@ jobs:
           sudo rm -rf node_modules .npm-cache .cmake-js || true
           docker run --rm --user $(id -u):$(id -g) -v ${{ github.workspace }}:/workspace -w /workspace -e HOME=/workspace -e NPM_CONFIG_CACHE=/workspace/.npm-cache mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
             npm ci &&
-            ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests' &&
+            ./integration_tests/__tests__/start-bitcoind.sh /workspace 'integration_tests' &&
             sleep 3 &&
             npm run test_integration
           "
