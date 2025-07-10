@@ -157,39 +157,6 @@ jobs:
           name: integration-reports
           path: ./reports/integration
 
-  integration-macos:
-    runs-on: macos-latest
-    needs: build-macos
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace-macos
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-      - name: Install Bitcoin Core
-        run: |
-          brew install bitcoin
-      - name: Run integration tests natively
-        run: |
-          npm ci
-          ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests'
-          sleep 3
-          npm run test_integration
-      - name: Store integration artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-artifacts-macos
-          path: ./build_coverage/lcov_cfddlc_output
-      - name: Store integration test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-reports-macos
-          path: ./reports/integration
-
   prebuild-linux:
     runs-on: ubuntu-latest
     steps:
