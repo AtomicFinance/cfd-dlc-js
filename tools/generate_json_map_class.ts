@@ -1685,7 +1685,6 @@ function generateTsData(dirname: string, filename: string,
   // initialize
   const project = new Project({
     tsConfigFilePath: `${__dirname}/../tsconfig.json`,
-    addFilesFromTsConfig: false,
   });
 
   if (loadCfdjsIndexFile) {

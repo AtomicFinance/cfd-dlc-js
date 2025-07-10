@@ -1,8 +1,8 @@
 {
   "namespace": ["cfd", "dlc", "js", "api", "json"],
   "request": {
-    ":class": "CreateDlcTransactionsRequest",
-    ":class:comment": "Create Dlc transactions",
+    ":class": "CreateSplicedDlcTransactionsRequest",
+    ":class:comment": "Create Spliced Dlc transactions",
     "payouts": [
       {
         ":class": "PayoutRequest",
@@ -120,7 +120,7 @@
     "optionPremium:require": "optional"
   },
   "response": {
-    ":class": "CreateDlcTransactionsResponse",
+    ":class": "CreateSplicedDlcTransactionsResponse",
     "fundTxHex": "",
     "cetsHex": [""],
     "refundTxHex": ""

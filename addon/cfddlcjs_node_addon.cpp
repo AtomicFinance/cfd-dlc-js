@@ -129,6 +129,10 @@ Value CreateDlcTransactions(const CallbackInfo &information) {
   return NodeAddonJsonApi(information, JsonMappingApi::CreateDlcTransactions);
 }
 
+Value CreateSplicedDlcTransactions(const CallbackInfo &information) {
+  return NodeAddonJsonApi(information, JsonMappingApi::CreateSplicedDlcTransactions);
+}
+
 Value CreateBatchDlcTransactions(const CallbackInfo &information) {
   return NodeAddonJsonApi(
     information, JsonMappingApi::CreateBatchDlcTransactions);
@@ -170,6 +174,18 @@ Value VerifyRefundTxSignature(const CallbackInfo &information) {
   return NodeAddonJsonApi(information, JsonMappingApi::VerifyRefundTxSignature);
 }
 
+Value SignDlcFundingInput(const CallbackInfo &information) {
+  return NodeAddonJsonApi(information, JsonMappingApi::SignDlcFundingInput);
+}
+
+Value GetRawDlcFundingInputSignature(const CallbackInfo &information) {
+  return NodeAddonJsonApi(information, JsonMappingApi::GetRawDlcFundingInputSignature);
+}
+
+Value VerifyDlcFundingInputSignature(const CallbackInfo &information) {
+  return NodeAddonJsonApi(information, JsonMappingApi::VerifyDlcFundingInputSignature);
+}
+
 /**
  * @brief JSON APIの生成初期化関数.
  * @param[in] env         環境情報
@@ -203,6 +219,9 @@ void InitializeJsonApi(Env env, Object *exports) {
     String::New(env, "CreateDlcTransactions"),
     Function::New(env, CreateDlcTransactions));
   exports->Set(
+    String::New(env, "CreateSplicedDlcTransactions"),
+    Function::New(env, CreateSplicedDlcTransactions));
+  exports->Set(
     String::New(env, "CreateBatchDlcTransactions"),
     Function::New(env, CreateBatchDlcTransactions));
   exports->Set(
@@ -227,6 +246,15 @@ void InitializeJsonApi(Env env, Object *exports) {
   exports->Set(
     String::New(env, "VerifyRefundTxSignature"),
     Function::New(env, VerifyRefundTxSignature));
+  exports->Set(
+    String::New(env, "SignDlcFundingInput"),
+    Function::New(env, SignDlcFundingInput));
+  exports->Set(
+    String::New(env, "GetRawDlcFundingInputSignature"),
+    Function::New(env, GetRawDlcFundingInputSignature));
+  exports->Set(
+    String::New(env, "VerifyDlcFundingInputSignature"),
+    Function::New(env, VerifyDlcFundingInputSignature));
 }
 
 }  // namespace json

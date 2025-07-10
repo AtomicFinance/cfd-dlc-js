@@ -8,12 +8,8 @@ const testCase = [
     "CreateRefundTransaction",
     cfddlcjs.CreateRefundTransaction,
     {
-      localFinalScriptPubkey: CfdUtils.GetAddressScript(
-        TestData.LocalFinalAddress
-      ),
-      remoteFinalScriptPubkey: CfdUtils.GetAddressScript(
-        TestData.RemoteFinalAddress
-      ),
+      localFinalScriptPubkey: CfdUtils.GetAddressScript(TestData.LocalFinalAddress),
+      remoteFinalScriptPubkey: CfdUtils.GetAddressScript(TestData.RemoteFinalAddress),
       localAmount: TestData.LocalCollateralAmount,
       remoteAmount: TestData.LocalCollateralAmount,
       fundTxId: TestData.FundTxId,
