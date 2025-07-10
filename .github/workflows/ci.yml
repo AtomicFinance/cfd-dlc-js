@@ -76,8 +76,8 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io
       - name: Run tests in Docker
         run: |
-          docker pull ghcr.io/cryptogarageinc/elements-testing:v0.1.0
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.1.0 /bin/bash -c "
+          docker pull ghcr.io/cryptogarageinc/elements-testing:v0.2.7
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.2.7 /bin/bash -c "
             npm ci &&
             npm run test_report
           "
@@ -136,8 +136,8 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io
       - name: Run integration tests in Docker
         run: |
-          docker pull ghcr.io/cryptogarageinc/elements-testing:v0.1.0
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.1.0 /bin/bash -c "
+          docker pull ghcr.io/cryptogarageinc/elements-testing:v0.2.7
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.2.7 /bin/bash -c "
             npm ci &&
             ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests' &&
             sleep 3 &&
