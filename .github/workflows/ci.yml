@@ -76,10 +76,8 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io
       - name: Run tests in Docker
         run: |
-          docker pull ghcr.io/cryptogarageinc/elements-testing:v0.2.7
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.2.7 /bin/bash -c "
-            curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&
-            apt-get install -y nodejs &&
+          docker pull mblackmblack/elements-testing-dockerfile:v0.2.8
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
             rm -rf node_modules &&
             npm ci &&
             npm run test_report
@@ -139,10 +137,8 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io
       - name: Run integration tests in Docker
         run: |
-          docker pull ghcr.io/cryptogarageinc/elements-testing:v0.2.7
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.2.7 /bin/bash -c "
-            curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&
-            apt-get install -y nodejs &&
+          docker pull mblackmblack/elements-testing-dockerfile:v0.2.8
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
             rm -rf node_modules &&
             npm ci &&
             ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests' &&
