@@ -77,8 +77,8 @@ jobs:
       - name: Run tests in Docker
         run: |
           docker pull mblackmblack/elements-testing-dockerfile:v0.2.8
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
-            rm -rf node_modules &&
+          sudo rm -rf node_modules || true
+          docker run --rm --user $(id -u):$(id -g) -v ${{ github.workspace }}:/workspace -w /workspace mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
             npm ci &&
             npm run test_report
           "
@@ -138,8 +138,8 @@ jobs:
       - name: Run integration tests in Docker
         run: |
           docker pull mblackmblack/elements-testing-dockerfile:v0.2.8
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
-            rm -rf node_modules &&
+          sudo rm -rf node_modules || true
+          docker run --rm --user $(id -u):$(id -g) -v ${{ github.workspace }}:/workspace -w /workspace mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
             npm ci &&
             ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests' &&
             sleep 3 &&
