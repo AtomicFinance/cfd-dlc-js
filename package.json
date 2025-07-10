@@ -110,7 +110,7 @@
     "run-script-os": "^1.1.6"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.12",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
@@ -118,7 +118,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^6.5.1",
     "eslint-config-google": "^0.14.0",
-    "jest": "^26.6.3",
+    "jest": "^30.0.4",
     "jest-junit": "^16.0.0",
     "prebuild": "^13.0.1",
     "prettier": "^2.1.1",
