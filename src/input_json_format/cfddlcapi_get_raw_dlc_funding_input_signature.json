@@ -1,0 +1,20 @@
+{
+  "namespace": ["cfd", "dlc", "js", "api", "json"],
+  "request": {
+    ":class": "GetRawDlcFundingInputSignatureRequest",
+    ":class:comment": "Get raw DLC funding input signature",
+    "fundTxHex": "",
+    "fundTxid": "",
+    "fundVout": 0,
+    "fundVout:type": "uint32_t",
+    "fundAmount": 0,
+    "fundAmount:type": "uint64_t",
+    "localFundPubkey": "",
+    "remoteFundPubkey": "",
+    "privkey": ""
+  },
+  "response": {
+    ":class": "GetRawDlcFundingInputSignatureResponse",
+    "hex": ""
+  }
+}

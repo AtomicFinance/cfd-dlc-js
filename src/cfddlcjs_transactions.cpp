@@ -27,6 +27,7 @@ using cfd::core::HashUtil;
 using cfd::core::Privkey;
 using cfd::core::Txid;
 using cfd::core::TxIn;
+using cfd::dlc::DlcInputInfo;
 using cfd::dlc::DlcManager;
 using cfd::dlc::DlcOutcome;
 using cfd::dlc::DlcTransactions;
@@ -60,6 +61,25 @@ static TxInputInfo ParseTxInRequest(TxInInfoRequestStruct &input_info) {
     TxIn input(txid, input_info.vout, 0);
     return {input, input_info.max_witness_length, input_info.input_serial_id};
   }
+}
+
+static DlcInputInfo
+ParseDlcInputRequest(DlcInputInfoRequestStruct &input_info) {
+  Txid fund_txid(input_info.fund_txid);
+  auto fund_amount = Amount::CreateBySatoshiAmount(input_info.fund_amount);
+  Pubkey local_fund_pubkey(input_info.local_fund_pubkey);
+  Pubkey remote_fund_pubkey(input_info.remote_fund_pubkey);
+
+  DlcInputInfo dlc_input;
+  dlc_input.fund_txid = fund_txid;
+  dlc_input.fund_vout = input_info.fund_vout;
+  dlc_input.fund_amount = fund_amount;
+  dlc_input.local_fund_pubkey = local_fund_pubkey;
+  dlc_input.remote_fund_pubkey = remote_fund_pubkey;
+  dlc_input.max_witness_length = input_info.max_witness_length;
+  dlc_input.input_serial_id = input_info.input_serial_id;
+
+  return dlc_input;
 }
 
 CreateFundTransactionResponseStruct DlcTransactionsApi::CreateFundTransaction(
@@ -352,10 +372,20 @@ CreateDlcTransactionsResponseStruct DlcTransactionsApi::CreateDlcTransactions(
       local_inputs.push_back(ParseTxInRequest(input_request));
     }
 
+    std::vector<DlcInputInfo> local_dlc_inputs;
+    for (auto dlc_input_request : request.local_dlc_inputs) {
+      local_dlc_inputs.push_back(ParseDlcInputRequest(dlc_input_request));
+    }
+
     std::vector<TxInputInfo> remote_inputs;
 
     for (auto input_request : request.remote_inputs) {
       remote_inputs.push_back(ParseTxInRequest(input_request));
+    }
+
+    std::vector<DlcInputInfo> remote_dlc_inputs;
+    for (auto dlc_input_request : request.remote_dlc_inputs) {
+      remote_dlc_inputs.push_back(ParseDlcInputRequest(dlc_input_request));
     }
 
     uint32_t fee_rate = request.fee_rate;
@@ -370,13 +400,15 @@ CreateDlcTransactionsResponseStruct DlcTransactionsApi::CreateDlcTransactions(
     PartyParams local_params = {
       local_fund_pubkey,         local_change_script_pubkey,
       local_final_script_pubkey, local_inputs,
-      local_input_amount,        local_collateral_amount,
-      local_payout_serial_id,    local_change_serial_id};
+      local_dlc_inputs,          local_input_amount,
+      local_collateral_amount,   local_payout_serial_id,
+      local_change_serial_id};
     PartyParams remote_params = {
       remote_fund_pubkey,         remote_change_script_pubkey,
       remote_final_script_pubkey, remote_inputs,
-      remote_input_amount,        remote_collateral_amount,
-      remote_payout_serial_id,    remote_change_serial_id};
+      remote_dlc_inputs,          remote_input_amount,
+      remote_collateral_amount,   remote_payout_serial_id,
+      remote_change_serial_id};
     auto transactions = DlcManager::CreateDlcTransactions(
       outcomes, local_params, remote_params, refund_locktime, fee_rate,
       option_dest, option_premium, fund_lock_time, cet_lock_time,
@@ -880,6 +912,209 @@ DlcTransactionsApi::VerifyRefundTxSignature(
   result = ExecuteStructApi<
     VerifyRefundTxSignatureRequestStruct,
     VerifyRefundTxSignatureResponseStruct>(
+    request, call_func, std::string(__FUNCTION__));
+  return result;
+}
+
+CreateSplicedDlcTransactionsResponseStruct
+DlcTransactionsApi::CreateSplicedDlcTransactions(
+  const CreateSplicedDlcTransactionsRequestStruct &request) {
+  auto call_func = [](const CreateSplicedDlcTransactionsRequestStruct &request)
+    -> CreateSplicedDlcTransactionsResponseStruct {
+    CreateSplicedDlcTransactionsResponseStruct response;
+
+    // Parse outcomes
+    std::vector<DlcOutcome> outcomes;
+    for (auto payout : request.payouts) {
+      auto local_payout = Amount::CreateBySatoshiAmount(payout.local);
+      auto remote_payout = Amount::CreateBySatoshiAmount(payout.remote);
+      outcomes.push_back({local_payout, remote_payout});
+    }
+
+    // Parse local inputs
+    std::vector<TxInputInfo> local_inputs;
+    for (auto input_request : request.local_inputs) {
+      local_inputs.push_back(ParseTxInRequest(input_request));
+    }
+
+    // Parse local DLC inputs
+    std::vector<DlcInputInfo> local_dlc_inputs;
+    for (auto dlc_input_request : request.local_dlc_inputs) {
+      local_dlc_inputs.push_back(ParseDlcInputRequest(dlc_input_request));
+    }
+
+    // Parse remote inputs
+    std::vector<TxInputInfo> remote_inputs;
+    for (auto input_request : request.remote_inputs) {
+      remote_inputs.push_back(ParseTxInRequest(input_request));
+    }
+
+    // Parse remote DLC inputs
+    std::vector<DlcInputInfo> remote_dlc_inputs;
+    for (auto dlc_input_request : request.remote_dlc_inputs) {
+      remote_dlc_inputs.push_back(ParseDlcInputRequest(dlc_input_request));
+    }
+
+    // Create PartyParams
+    cfd::dlc::PartyParams local_params;
+    local_params.fund_pubkey = Pubkey(request.local_fund_pubkey);
+    local_params.change_script_pubkey =
+      Script(request.local_change_script_pubkey);
+    local_params.final_script_pubkey =
+      Script(request.local_final_script_pubkey);
+    local_params.inputs_info = local_inputs;
+    local_params.dlc_inputs_info = local_dlc_inputs;
+    local_params.input_amount =
+      Amount::CreateBySatoshiAmount(request.local_input_amount);
+    local_params.collateral =
+      Amount::CreateBySatoshiAmount(request.local_collateral_amount);
+    local_params.payout_serial_id = request.local_payout_serial_id;
+    local_params.change_serial_id = request.local_change_serial_id;
+
+    cfd::dlc::PartyParams remote_params;
+    remote_params.fund_pubkey = Pubkey(request.remote_fund_pubkey);
+    remote_params.change_script_pubkey =
+      Script(request.remote_change_script_pubkey);
+    remote_params.final_script_pubkey =
+      Script(request.remote_final_script_pubkey);
+    remote_params.inputs_info = remote_inputs;
+    remote_params.dlc_inputs_info = remote_dlc_inputs;
+    remote_params.input_amount =
+      Amount::CreateBySatoshiAmount(request.remote_input_amount);
+    remote_params.collateral =
+      Amount::CreateBySatoshiAmount(request.remote_collateral_amount);
+    remote_params.payout_serial_id = request.remote_payout_serial_id;
+    remote_params.change_serial_id = request.remote_change_serial_id;
+
+    // Create optional parameters
+    Address option_dest =
+      request.option_dest.empty() ? Address() : Address(request.option_dest);
+    Amount option_premium =
+      Amount::CreateBySatoshiAmount(request.option_premium);
+
+    // Create spliced DLC transactions
+    auto dlc_transactions = DlcManager::CreateSplicedDlcTransactions(
+      outcomes, local_params, remote_params, request.refund_locktime,
+      request.fee_rate, option_dest, option_premium, request.fund_lock_time,
+      request.cet_lock_time, request.fund_output_serial_id);
+
+    // Set response values
+    response.fund_tx_hex = dlc_transactions.fund_transaction.GetHex();
+    response.refund_tx_hex = dlc_transactions.refund_transaction.GetHex();
+    for (auto cet : dlc_transactions.cets) {
+      response.cets_hex.push_back(cet.GetHex());
+    }
+
+    return response;
+  };
+
+  CreateSplicedDlcTransactionsResponseStruct result;
+  result = ExecuteStructApi<
+    CreateSplicedDlcTransactionsRequestStruct,
+    CreateSplicedDlcTransactionsResponseStruct>(
+    request, call_func, std::string(__FUNCTION__));
+  return result;
+}
+
+SignDlcFundingInputResponseStruct DlcTransactionsApi::SignDlcFundingInput(
+  const SignDlcFundingInputRequestStruct &request) {
+  auto call_func = [](const SignDlcFundingInputRequestStruct &request)
+    -> SignDlcFundingInputResponseStruct {
+    SignDlcFundingInputResponseStruct response;
+
+    auto fund_transaction = TransactionController(request.fund_tx_hex);
+
+    // Create DLC input info
+    DlcInputInfo dlc_input;
+    dlc_input.fund_txid = Txid(request.fund_txid);
+    dlc_input.fund_vout = request.fund_vout;
+    dlc_input.fund_amount = Amount::CreateBySatoshiAmount(request.fund_amount);
+    dlc_input.local_fund_pubkey = Pubkey(request.local_fund_pubkey);
+    dlc_input.remote_fund_pubkey = Pubkey(request.remote_fund_pubkey);
+
+    auto local_privkey = Privkey(request.local_privkey);
+    auto remote_signature = ByteData(request.remote_signature);
+
+    DlcManager::SignDlcFundingInput(
+      &fund_transaction, dlc_input, local_privkey, remote_signature);
+
+    response.hex = fund_transaction.GetHex();
+    return response;
+  };
+
+  SignDlcFundingInputResponseStruct result;
+  result = ExecuteStructApi<
+    SignDlcFundingInputRequestStruct, SignDlcFundingInputResponseStruct>(
+    request, call_func, std::string(__FUNCTION__));
+  return result;
+}
+
+GetRawDlcFundingInputSignatureResponseStruct
+DlcTransactionsApi::GetRawDlcFundingInputSignature(
+  const GetRawDlcFundingInputSignatureRequestStruct &request) {
+  auto call_func =
+    [](const GetRawDlcFundingInputSignatureRequestStruct &request)
+    -> GetRawDlcFundingInputSignatureResponseStruct {
+    GetRawDlcFundingInputSignatureResponseStruct response;
+
+    auto fund_transaction = TransactionController(request.fund_tx_hex);
+
+    // Create DLC input info
+    DlcInputInfo dlc_input;
+    dlc_input.fund_txid = Txid(request.fund_txid);
+    dlc_input.fund_vout = request.fund_vout;
+    dlc_input.fund_amount = Amount::CreateBySatoshiAmount(request.fund_amount);
+    dlc_input.local_fund_pubkey = Pubkey(request.local_fund_pubkey);
+    dlc_input.remote_fund_pubkey = Pubkey(request.remote_fund_pubkey);
+
+    auto privkey = Privkey(request.privkey);
+
+    auto signature = DlcManager::GetRawDlcFundingInputSignature(
+      fund_transaction, dlc_input, privkey);
+
+    response.hex = signature.GetHex();
+    return response;
+  };
+
+  GetRawDlcFundingInputSignatureResponseStruct result;
+  result = ExecuteStructApi<
+    GetRawDlcFundingInputSignatureRequestStruct,
+    GetRawDlcFundingInputSignatureResponseStruct>(
+    request, call_func, std::string(__FUNCTION__));
+  return result;
+}
+
+VerifyDlcFundingInputSignatureResponseStruct
+DlcTransactionsApi::VerifyDlcFundingInputSignature(
+  const VerifyDlcFundingInputSignatureRequestStruct &request) {
+  auto call_func =
+    [](const VerifyDlcFundingInputSignatureRequestStruct &request)
+    -> VerifyDlcFundingInputSignatureResponseStruct {
+    VerifyDlcFundingInputSignatureResponseStruct response;
+
+    auto fund_transaction = TransactionController(request.fund_tx_hex);
+
+    // Create DLC input info
+    DlcInputInfo dlc_input;
+    dlc_input.fund_txid = Txid(request.fund_txid);
+    dlc_input.fund_vout = request.fund_vout;
+    dlc_input.fund_amount = Amount::CreateBySatoshiAmount(request.fund_amount);
+    dlc_input.local_fund_pubkey = Pubkey(request.local_fund_pubkey);
+    dlc_input.remote_fund_pubkey = Pubkey(request.remote_fund_pubkey);
+
+    auto signature = ByteData(request.signature);
+    auto pubkey = Pubkey(request.pubkey);
+
+    response.valid = DlcManager::VerifyDlcFundingInputSignature(
+      fund_transaction, dlc_input, signature, pubkey);
+
+    return response;
+  };
+
+  VerifyDlcFundingInputSignatureResponseStruct result;
+  result = ExecuteStructApi<
+    VerifyDlcFundingInputSignatureRequestStruct,
+    VerifyDlcFundingInputSignatureResponseStruct>(
     request, call_func, std::string(__FUNCTION__));
   return result;
 }

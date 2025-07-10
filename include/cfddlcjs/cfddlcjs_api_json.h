@@ -73,6 +73,8 @@ class CFD_DLC_JS_API_EXPORT JsonMappingApi {
 
   static std::string CreateDlcTransactions(const std::string &request_message);
   static std::string
+  CreateSplicedDlcTransactions(const std::string &request_message);
+  static std::string
   CreateBatchDlcTransactions(const std::string &request_message);
   static std::string
   CreateCetAdaptorSignature(const std::string &request_message);
@@ -89,6 +91,12 @@ class CFD_DLC_JS_API_EXPORT JsonMappingApi {
   AddSignaturesToRefundTx(const std::string &request_message);
   static std::string
   VerifyRefundTxSignature(const std::string &request_message);
+  static std::string
+  SignDlcFundingInput(const std::string &request_message);
+  static std::string
+  GetRawDlcFundingInputSignature(const std::string &request_message);
+  static std::string
+  VerifyDlcFundingInputSignature(const std::string &request_message);
 
  private:
   JsonMappingApi();
