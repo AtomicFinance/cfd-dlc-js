@@ -35,7 +35,7 @@ jobs:
           path: .
 
   build-macos:
-    runs-on: self-hosted
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js
@@ -50,86 +50,112 @@ jobs:
           name: workspace-macos
           path: .
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Download workspace
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: workspace
-  #     - name: Install Docker
-  #       run: |
-  #         sudo apt-get remove -y docker docker-engine docker.io containerd runc
-  #         sudo apt-get update
-  #         sudo apt-get install -y \
-  #           ca-certificates \
-  #           curl \
-  #           gnupg \
-  #           lsb-release
-  #         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-  #         echo \
-  #           "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  #           $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  #         sudo apt-get update
-  #         sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-  #     - name: Run tests in Docker
-  #       run: |
-  #         docker pull ghcr.io/cryptogarageinc/elements-testing:v0.1.0
-  #         docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.1.0 /bin/bash -c "
-  #           npm ci &&
-  #           npm run test_report
-  #         "
-  #     - name: Store test results
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: jest-reports
-  #         path: ./reports/jest
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+      - name: Install Docker
+        run: |
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+      - name: Run tests in Docker
+        run: |
+          docker pull mblackmblack/elements-testing-dockerfile:v0.2.8
+          sudo rm -rf node_modules .npm-cache .cmake-js || true
+          docker run --rm --user $(id -u):$(id -g) -v ${{ github.workspace }}:/workspace -w /workspace -e HOME=/workspace -e NPM_CONFIG_CACHE=/workspace/.npm-cache mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
+            npm ci &&
+            npm run test_report
+          "
+          sudo rm -rf .npm-cache .cmake-js || true
+      - name: Store test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-reports
+          path: ./reports/jest
 
-  # integration:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Download workspace
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: workspace
-  #     - name: Install Docker
-  #       run: |
-  #         sudo apt-get remove -y docker docker-engine docker.io containerd runc
-  #         sudo apt-get update
-  #         sudo apt-get install -y \
-  #           ca-certificates \
-  #           curl \
-  #           gnupg \
-  #           lsb-release
-  #         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-  #         echo \
-  #           "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  #           $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  #         sudo apt-get update
-  #         sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-  #     - name: Run integration tests in Docker
-  #       run: |
-  #         docker pull ghcr.io/cryptogarageinc/elements-testing:v0.1.0
-  #         docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/cryptogarageinc/elements-testing:v0.1.0 /bin/bash -c "
-  #           npm ci &&
-  #           ./integration_tests/__tests__/start-bitcoind.sh $(pwd) 'integration_tests' &&
-  #           sleep 3 &&
-  #           npm run test_integration
-  #         "
-  #     - name: Store integration artifacts
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: integration-artifacts
-  #         path: ./build_coverage/lcov_cfddlc_output
-  #     - name: Store integration test results
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: integration-reports
-  #         path: ./reports/integration
+  test-macos:
+    runs-on: macos-latest
+    needs: build-macos
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace-macos
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - name: Run tests natively
+        run: |
+          npm ci
+          npm run test_report
+      - name: Store test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-reports-macos
+          path: ./reports/jest
+
+  integration:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+      - name: Install Docker
+        run: |
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+      - name: Run integration tests in Docker
+        run: |
+          docker pull mblackmblack/elements-testing-dockerfile:v0.2.8
+          docker run --rm --user $(id -u):$(id -g) -v ${{ github.workspace }}:/workspace -w /workspace -e HOME=/workspace -e NPM_CONFIG_CACHE=/workspace/.npm-cache mblackmblack/elements-testing-dockerfile:v0.2.8 /bin/bash -c "
+            npm ci --prefer-offline --no-audit --no-fund &&
+            ./integration_tests/__tests__/start-bitcoind.sh /workspace 'integration_tests' &&
+            sleep 3 &&
+            npm run test_integration
+          "
+          sudo rm -rf .npm-cache .cmake-js || true
+      - name: Store integration artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-artifacts
+          path: ./build_coverage/lcov_cfddlc_output
+      - name: Store integration test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-reports
+          path: ./reports/integration
 
   prebuild-linux:
     runs-on: ubuntu-latest
@@ -186,7 +212,7 @@ jobs:
       - run: npm run prebuild_upload_all -- ${{ secrets.GITHUB_TOKEN }}
 
   prebuild-macos:
-    runs-on: self-hosted
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
