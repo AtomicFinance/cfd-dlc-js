@@ -2,6 +2,7 @@
 
 prebuild \
   --backend cmake-js \
+  -t 22.12.0 \
   -t 20.18.0 \
   -t 18.18.2 \
   -t 16.20.2 \
